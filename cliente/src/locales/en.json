@@ -1,0 +1,20 @@
+{
+  "navHome": "Home",
+  "navSummaries": "Summaries",
+  "navAdmin": "Admin",
+  "navLogin": "Login",
+  "navLogout": "Logout",
+  "homeTitle": "Welcome to your Study Hub",
+  "homeSubtitle": "Summaries and organized material for your courses.",
+  "homeCTA": "Go to Summaries",
+  "loginTitle": "Sign In",
+  "loginEmail": "Email",
+  "loginPassword": "Password",
+  "loginButton": "Login",
+  "loginLoading": "Logging in...",
+  "loginErrorEmpty": "Please fill all fields.",
+  "loginErrorGeneric": "Invalid credentials.",
+  "summariesTitle": "Summary Library",
+  "summariesDesc": "Browse available material.",
+  "summaryCardView": "View Summary"
+}

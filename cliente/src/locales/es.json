@@ -1,0 +1,20 @@
+{
+  "navHome": "Inicio",
+  "navSummaries": "Resúmenes",
+  "navAdmin": "Admin",
+  "navLogin": "Iniciar Sesión",
+  "navLogout": "Cerrar Sesión",
+  "homeTitle": "Bienvenido a tu Centro de Estudios",
+  "homeSubtitle": "Resúmenes y material organizado para tus ramos.",
+  "homeCTA": "Ir a Resúmenes",
+  "loginTitle": "Acceder",
+  "loginEmail": "Correo Electrónico",
+  "loginPassword": "Contraseña",
+  "loginButton": "Ingresar",
+  "loginLoading": "Ingresando...",
+  "loginErrorEmpty": "Completa todos los campos.",
+  "loginErrorGeneric": "Credenciales inválidas.",
+  "summariesTitle": "Biblioteca de Resúmenes",
+  "summariesDesc": "Explora el material disponible.",
+  "summaryCardView": "Ver Resumen"
+}

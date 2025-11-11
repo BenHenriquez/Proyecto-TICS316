@@ -1,0 +1,26 @@
+# Node
+node_modules/
+npm-debug.log*
+pnpm-lock.yaml
+package-lock.json
+yarn.lock
+
+# Vite/Build
+dist/
+.vite/
+.cache/
+
+# Env
+*.env
+servidor/.env
+cliente/.env
+
+# IDE
+.vscode/
+.DS_Store
+
+# Uploads (no subir PDFs de prueba)
+servidor/uploads/
+
+# Coverage
+coverage/
