@@ -1,29 +1,59 @@
 import { Router } from 'express'
 import { authMiddleware } from '../utils/authMiddleware.js'
 import multer from 'multer'
+import path from 'path'
 
-const upload = multer({ dest: 'uploads/' })
+// Configurar multer para mantener la extensión del archivo
+const storage = multer.diskStorage({
+  destination: 'uploads/',
+  filename: (req, file, cb) => {
+    const uniqueSuffix = Date.now() + '-' + Math.round(Math.random() * 1E9)
+    cb(null, uniqueSuffix + path.extname(file.originalname))
+  }
+})
+
+const upload = multer({ 
+  storage,
+  fileFilter: (req, file, cb) => {
+    if (file.mimetype === 'application/pdf') {
+      cb(null, true)
+    } else {
+      cb(new Error('Solo se permiten archivos PDF'))
+    }
+  }
+})
+
 const router = Router()
 
 let summaries = [
-  { id: 1, course: 'Cálculo I', unit: 'Unidad 1', title: 'Límites', fileName: 'limites.pdf' }
+  { 
+    id: 1, 
+    course: 'Cálculo I', 
+    unit: 'Unidad 1', 
+    title: 'Límites y Continuidad',
+    filepath: '/uploads/ejemplo.pdf' // Ruta relativa para el frontend
+  }
 ]
 
-router.get('/', authMiddleware, (req, res) => {
+// 🔥 Permitir acceso público para visualizar
+router.get('/', (req, res) => {
   res.json(summaries)
 })
 
 router.post('/', authMiddleware, upload.single('file'), (req, res) => {
   const { course, unit, title } = req.body
-  if (!course || !unit || !title || !req.file) return res.status(400).json({ error: 'Datos incompletos' })
+  if (!course || !unit || !title || !req.file) {
+    return res.status(400).json({ error: 'Datos incompletos' })
+  }
+  
   const summary = {
     id: Date.now(),
     course,
     unit,
     title,
-    fileName: req.file.originalname,
-    storageName: req.file.filename
+    filepath: `/uploads/${req.file.filename}` // Ruta completa
   }
+  
   summaries.unshift(summary)
   res.json(summary)
 })

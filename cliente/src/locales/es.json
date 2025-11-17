@@ -16,5 +16,13 @@
   "loginErrorGeneric": "Credenciales inválidas.",
   "summariesTitle": "Biblioteca de Resúmenes",
   "summariesDesc": "Explora el material disponible.",
-  "summaryCardView": "Ver Resumen"
+  "summaryCardView": "Ver Resumen",
+  "adminFormTitle": "Subir Nuevo Resumen",
+  "adminFormCourse": "Curso",
+  "adminFormUnit": "Unidad",
+  "adminFormTitlePlaceholder": "Título del resumen",
+  "adminFormSave": "Guardar",
+  "adminExistingTitle": "Resúmenes Existentes",
+  "adminExistingEdit": "Editar",
+  "adminExistingDelete": "Eliminar"
 }

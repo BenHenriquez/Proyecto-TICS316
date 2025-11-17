@@ -12,6 +12,7 @@ function AppContent() {
   const [lang, setLang] = useState('es')
   const { user, loading } = useAuth()
   const t = useTranslation(lang)
+  const [summaries, setSummaries] = useState([]) // 🔥 NUEVA LÍNEA
 
   if (loading) {
     return (
@@ -27,7 +28,7 @@ function AppContent() {
       {page === 'home' && <HomePage setPage={setPage} t={t} />}
       {page === 'login' && !user && <LoginPage t={t} setPage={setPage} />}
       {page === 'summaries' && user && <SummariesPage t={t} />}
-      {page === 'admin' && user?.isAdmin && <AdminPanel t={t} />}
+      {page === 'admin' && user?.isAdmin && <AdminPanel t={t} summaries={summaries} setSummaries={setSummaries} />}
     </div>
   )
 }
