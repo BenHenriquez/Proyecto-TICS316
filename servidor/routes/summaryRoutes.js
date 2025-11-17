@@ -26,12 +26,61 @@ const upload = multer({
 const router = Router()
 
 let summaries = [
+  // Cálculo I
   { 
     id: 1, 
     course: 'Cálculo I', 
     unit: 'Unidad 1', 
     title: 'Límites y Continuidad',
-    filepath: '/uploads/ejemplo.pdf' // Ruta relativa para el frontend
+    filepath: '/uploads/ejemplo.pdf'
+  },
+  
+  // Redes de Computadores
+  { 
+    id: 2, 
+    course: 'Redes de Computadores', 
+    unit: 'Unidad 1', 
+    title: 'Introducción a TCP/IP',
+    filepath: '/uploads/redes-tcp-ip.pdf'
+  },
+  { 
+    id: 3, 
+    course: 'Redes de Computadores', 
+    unit: 'Unidad 2', 
+    title: 'Protocolos de Red',
+    filepath: '/uploads/redes-protocolos.pdf'
+  },
+  
+  // Investigación de Operaciones
+  { 
+    id: 4, 
+    course: 'Investigación de Operaciones', 
+    unit: 'Unidad 1', 
+    title: 'Programación Lineal',
+    filepath: '/uploads/io-programacion-lineal.pdf'
+  },
+  { 
+    id: 5, 
+    course: 'Investigación de Operaciones', 
+    unit: 'Unidad 2', 
+    title: 'Método Simplex',
+    filepath: '/uploads/io-simplex.pdf'
+  },
+  
+  // Diseño de Software
+  { 
+    id: 6, 
+    course: 'Diseño de Software', 
+    unit: 'Unidad 1', 
+    title: 'Patrones de Diseño',
+    filepath: '/uploads/software-patrones.pdf'
+  },
+  { 
+    id: 7, 
+    course: 'Diseño de Software', 
+    unit: 'Unidad 2', 
+    title: 'Diagramas UML',
+    filepath: '/uploads/software-uml.pdf'
   }
 ]
 
