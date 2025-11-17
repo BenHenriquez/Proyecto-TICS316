@@ -16,5 +16,13 @@
   "loginErrorGeneric": "Invalid credentials.",
   "summariesTitle": "Summary Library",
   "summariesDesc": "Browse available material.",
-  "summaryCardView": "View Summary"
+  "summaryCardView": "View Summary",
+  "adminFormTitle": "Upload New Summary",
+  "adminFormCourse": "Course",
+  "adminFormUnit": "Unit",
+  "adminFormTitlePlaceholder": "Summary title",
+  "adminFormSave": "Save",
+  "adminExistingTitle": "Existing Summaries",
+  "adminExistingEdit": "Edit",
+  "adminExistingDelete": "Delete"
 }

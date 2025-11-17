@@ -1,94 +1,209 @@
-import React, { useState } from 'react'
-import { createSummary, deleteSummaryApi, updateSummary } from '../api/summaries.js'
+import React, { useState, useEffect } from 'react'
+import { fetchSummaries } from '../api/summaries.js'
 
-export default function AdminPanel({ t, summaries, setSummaries }) {
-  const [form, setForm] = useState({ course: '', unit: '', title: '', file: null })
-  const [editingId, setEditingId] = useState(null)
-  const [editForm, setEditForm] = useState({ course: '', unit: '', title: '' })
+export default function AdminPanel({ t }) {
+  const [summaries, setSummaries] = useState([])
+  const [loading, setLoading] = useState(true)
+  const [uploading, setUploading] = useState(false)
+  const [formData, setFormData] = useState({
+    title: '',
+    course: '',
+    unit: '',
+    file: null
+  })
+
+  useEffect(() => {
+    loadSummaries()
+  }, [])
+
+  const loadSummaries = async () => {
+    try {
+      const data = await fetchSummaries()
+      setSummaries(data || [])
+    } catch (e) {
+      console.error('Error loading summaries', e)
+    } finally {
+      setLoading(false)
+    }
+  }
 
   const handleSubmit = async (e) => {
     e.preventDefault()
-    const fd = new FormData()
-    fd.append('course', form.course)
-    fd.append('unit', form.unit)
-    fd.append('title', form.title)
-    fd.append('file', form.file)
+    if (!formData.title || !formData.course || !formData.unit || !formData.file) {
+      alert('Por favor completa todos los campos')
+      return
+    }
+
+    setUploading(true)
+    const form = new FormData()
+    form.append('title', formData.title)
+    form.append('course', formData.course)
+    form.append('unit', formData.unit)
+    form.append('file', formData.file)
+
     try {
-      const created = await createSummary(fd)
-      setSummaries(prev => [created, ...prev])
-      setForm({ course: '', unit: '', title: '', file: null })
-      alert('Creado')
-    } catch (err) {
-      alert('Error al crear')
+      const token = localStorage.getItem('token')
+      const res = await fetch('http://localhost:4000/api/summaries', {
+        method: 'POST',
+        headers: { Authorization: `Bearer ${token}` },
+        body: form
+      })
+
+      if (res.ok) {
+        alert('✅ Resumen subido exitosamente')
+        setFormData({ title: '', course: '', unit: '', file: null })
+        loadSummaries()
+      } else {
+        alert('❌ Error al subir resumen')
+      }
+    } catch (e) {
+      console.error('Upload error', e)
+      alert('❌ Error de conexión')
+    } finally {
+      setUploading(false)
     }
   }
 
-  const startEdit = (s) => {
-    setEditingId(s.id)
-    setEditForm({ course: s.course, unit: s.unit, title: s.title })
-  }
+  const handleDelete = async (id) => {
+    if (!confirm('¿Eliminar este resumen?')) return
 
-  const confirmEdit = async () => {
     try {
-      const updated = await updateSummary(editingId, editForm)
-      setSummaries(prev => prev.map(s => s.id === editingId ? updated : s))
-      setEditingId(null)
-      alert('Actualizado')
-    } catch {
-      alert('Error al actualizar')
-    }
-  }
+      const token = localStorage.getItem('token')
+      const res = await fetch(`http://localhost:4000/api/summaries/${id}`, {
+        method: 'DELETE',
+        headers: { Authorization: `Bearer ${token}` }
+      })
 
-  const remove = async (id) => {
-    if (!confirm('Eliminar?')) return
-    try {
-      await deleteSummaryApi(id)
-      setSummaries(prev => prev.filter(s => s.id !== id))
-    } catch {
-      alert('Error al eliminar')
+      if (res.ok) {
+        alert('✅ Resumen eliminado')
+        loadSummaries()
+      } else {
+        alert('❌ Error al eliminar')
+      }
+    } catch (e) {
+      console.error('Delete error', e)
+      alert('❌ Error de conexión')
     }
   }
 
   return (
-    <div className="p-4 grid gap-8 lg:grid-cols-2">
-      <div className="bg-white p-6 rounded shadow">
-        <h3 className="text-xl font-bold mb-4">{t('adminFormTitle')}</h3>
-        <form onSubmit={handleSubmit} className="space-y-4">
-          <input className="w-full px-4 py-2 border rounded" placeholder={t('adminFormCourse')} value={form.course} onChange={e => setForm({ ...form, course: e.target.value })} />
-          <input className="w-full px-4 py-2 border rounded" placeholder={t('adminFormUnit')} value={form.unit} onChange={e => setForm({ ...form, unit: e.target.value })} />
-            <input className="w-full px-4 py-2 border rounded" placeholder={t('adminFormTitlePlaceholder')} value={form.title} onChange={e => setForm({ ...form, title: e.target.value })} />
-          <input type="file" accept=".pdf" onChange={e => setForm({ ...form, file: e.target.files[0] })} />
-          <button className="w-full bg-green-600 text-white py-2 rounded">{t('adminFormSave')}</button>
-        </form>
-      </div>
-      <div className="bg-white p-6 rounded shadow">
-        <h3 className="text-xl font-bold mb-4">{t('adminExistingTitle')}</h3>
-        <ul className="space-y-3">
-          {summaries.map(s => (
-            <li key={s.id} className="p-3 border rounded flex flex-col gap-2">
-              {editingId === s.id ? (
-                <>
-                  <input className="border px-2 py-1" value={editForm.course} onChange={e => setEditForm({ ...editForm, course: e.target.value })} />
-                  <input className="border px-2 py-1" value={editForm.unit} onChange={e => setEditForm({ ...editForm, unit: e.target.value })} />
-                  <input className="border px-2 py-1" value={editForm.title} onChange={e => setEditForm({ ...editForm, title: e.target.value })} />
+    <div className="min-h-screen bg-gradient-to-br from-black via-gray-900 to-green-900 py-8 px-4">
+      <div className="max-w-6xl mx-auto">
+        {/* Header */}
+        <div className="text-center mb-12">
+          <div className="flex justify-center mb-4">
+            <div className="w-16 h-16 bg-gradient-to-br from-green-400 to-green-600 rounded-2xl flex items-center justify-center shadow-xl">
+              <span className="text-3xl">⚙️</span>
+            </div>
+          </div>
+          <h1 className="text-4xl font-extrabold mb-2">
+            <span className="bg-gradient-to-r from-green-400 to-green-600 bg-clip-text text-transparent">
+              Panel de Administración
+            </span>
+          </h1>
+          <p className="text-gray-400">Gestiona los resúmenes disponibles</p>
+        </div>
+
+        {/* Upload Form */}
+        <div className="bg-gray-800/50 backdrop-blur-sm border border-green-500/30 rounded-2xl p-8 mb-12">
+          <h2 className="text-2xl font-bold text-green-400 mb-6">📤 Subir Nuevo Resumen</h2>
+          
+          <form onSubmit={handleSubmit} className="space-y-6">
+            <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
+              <div>
+                <label className="block text-gray-300 text-sm font-semibold mb-2">Título</label>
+                <input
+                  type="text"
+                  value={formData.title}
+                  onChange={e => setFormData({...formData, title: e.target.value})}
+                  className="w-full bg-gray-900/50 border border-green-500/30 text-white px-4 py-3 rounded-lg focus:outline-none focus:border-green-500"
+                  placeholder="Ej: Resumen de Cálculo I"
+                />
+              </div>
+
+              <div>
+                <label className="block text-gray-300 text-sm font-semibold mb-2">Curso</label>
+                <input
+                  type="text"
+                  value={formData.course}
+                  onChange={e => setFormData({...formData, course: e.target.value})}
+                  className="w-full bg-gray-900/50 border border-green-500/30 text-white px-4 py-3 rounded-lg focus:outline-none focus:border-green-500"
+                  placeholder="Ej: Cálculo I"
+                />
+              </div>
+
+              <div>
+                <label className="block text-gray-300 text-sm font-semibold mb-2">Unidad</label>
+                <input
+                  type="text"
+                  value={formData.unit}
+                  onChange={e => setFormData({...formData, unit: e.target.value})}
+                  className="w-full bg-gray-900/50 border border-green-500/30 text-white px-4 py-3 rounded-lg focus:outline-none focus:border-green-500"
+                  placeholder="Ej: Unidad 1"
+                />
+              </div>
+
+              <div>
+                <label className="block text-gray-300 text-sm font-semibold mb-2">Archivo PDF</label>
+                <input
+                  type="file"
+                  accept=".pdf"
+                  onChange={e => setFormData({...formData, file: e.target.files[0]})}
+                  className="w-full bg-gray-900/50 border border-green-500/30 text-gray-300 px-4 py-3 rounded-lg focus:outline-none focus:border-green-500 file:mr-4 file:py-2 file:px-4 file:rounded-lg file:border-0 file:bg-green-500 file:text-black file:font-semibold file:cursor-pointer hover:file:bg-green-600"
+                />
+              </div>
+            </div>
+
+            <button
+              type="submit"
+              disabled={uploading}
+              className="w-full bg-gradient-to-r from-green-500 to-green-600 text-black py-4 rounded-lg font-bold text-lg hover:from-green-600 hover:to-green-700 transition-all shadow-lg shadow-green-500/50 disabled:opacity-50"
+            >
+              {uploading ? '⏳ Subiendo...' : '📤 Subir Resumen'}
+            </button>
+          </form>
+        </div>
+
+        {/* Summaries List */}
+        <div className="bg-gray-800/50 backdrop-blur-sm border border-green-500/30 rounded-2xl p-8">
+          <h2 className="text-2xl font-bold text-green-400 mb-6">📚 Resúmenes Existentes ({summaries.length})</h2>
+          
+          {loading ? (
+            <div className="text-center py-12 text-gray-400">Cargando...</div>
+          ) : summaries.length === 0 ? (
+            <div className="text-center py-12 text-gray-400">No hay resúmenes aún</div>
+          ) : (
+            <div className="space-y-4">
+              {summaries.map(s => (
+                <div key={s.id} className="bg-gray-900/50 border border-green-500/20 rounded-xl p-4 flex items-center justify-between hover:border-green-500/50 transition-all">
+                  <div className="flex-1">
+                    <h3 className="text-white font-bold mb-1">{s.title}</h3>
+                    <div className="flex gap-4 text-sm">
+                      <span className="text-green-400">📚 {s.course}</span>
+                      <span className="text-gray-400">📖 {s.unit}</span>
+                    </div>
+                  </div>
                   <div className="flex gap-2">
-                    <button onClick={confirmEdit} className="bg-blue-600 text-white px-3 py-1 rounded">{t('adminExistingEdit')}</button>
-                    <button onClick={() => setEditingId(null)} className="bg-gray-300 px-3 py-1 rounded">Cancelar</button>
+                    <a
+                      href={`http://localhost:4000${s.filepath}`}
+                      target="_blank"
+                      rel="noopener noreferrer"
+                      className="px-4 py-2 bg-blue-500 text-white rounded-lg hover:bg-blue-600 transition-colors"
+                    >
+                      👁️ Ver
+                    </a>
+                    <button
+                      onClick={() => handleDelete(s.id)}
+                      className="px-4 py-2 bg-red-500 text-white rounded-lg hover:bg-red-600 transition-colors"
+                    >
+                      🗑️ Eliminar
+                    </button>
                   </div>
-                </>
-              ) : (
-                <>
-                  <p className="font-medium">{s.title}</p>
-                  <p className="text-sm text-gray-500">{s.course} | {s.unit}</p>
-                  <div className="flex gap-3">
-                    <button onClick={() => startEdit(s)} className="text-blue-600">{t('adminExistingEdit')}</button>
-                    <button onClick={() => remove(s.id)} className="text-red-600">{t('adminExistingDelete')}</button>
-                  </div>
-                </>
-              )}
-            </li>
-          ))}
-        </ul>
+                </div>
+              ))}
+            </div>
+          )}
+        </div>
       </div>
     </div>
   )

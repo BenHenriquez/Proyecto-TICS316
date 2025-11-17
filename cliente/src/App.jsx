@@ -12,12 +12,14 @@ function AppContent() {
   const [lang, setLang] = useState('es')
   const { user, loading } = useAuth()
   const t = useTranslation(lang)
-  const [summaries, setSummaries] = useState([]) // 🔥 NUEVA LÍNEA
 
   if (loading) {
     return (
-      <div className="min-h-screen flex items-center justify-center">
-        <div className="animate-spin rounded-full h-16 w-16 border-b-2 border-blue-600"></div>
+      <div className="min-h-screen bg-gray-50 flex items-center justify-center">
+        <div className="text-center">
+          <div className="animate-spin rounded-full h-16 w-16 border-4 border-blue-600 border-t-transparent mx-auto mb-4"></div>
+          <p className="text-gray-600 text-lg font-medium">Cargando StudyHub...</p>
+        </div>
       </div>
     )
   }
@@ -28,7 +30,7 @@ function AppContent() {
       {page === 'home' && <HomePage setPage={setPage} t={t} />}
       {page === 'login' && !user && <LoginPage t={t} setPage={setPage} />}
       {page === 'summaries' && user && <SummariesPage t={t} />}
-      {page === 'admin' && user?.isAdmin && <AdminPanel t={t} summaries={summaries} setSummaries={setSummaries} />}
+      {page === 'admin' && user?.isAdmin && <AdminPanel t={t} />}
     </div>
   )
 }
