@@ -28,25 +28,23 @@ export default function LoginPage({ t, setPage }) {
   }
 
   return (
-    <div className="min-h-screen bg-gradient-to-br from-black via-gray-900 to-green-900 flex items-center justify-center px-4 py-12">
+    <div className="min-h-screen bg-gray-50 flex items-center justify-center px-4 py-12">
       <div className="w-full max-w-md">
         {/* Icon */}
         <div className="flex justify-center mb-8">
-          <div className="w-20 h-20 bg-gradient-to-br from-green-400 to-green-600 rounded-2xl flex items-center justify-center shadow-2xl shadow-green-500/50">
+          <div className="w-20 h-20 bg-gradient-to-br from-blue-500 to-blue-700 rounded-2xl flex items-center justify-center shadow-2xl">
             <span className="text-4xl">🔐</span>
           </div>
         </div>
 
         {/* Form Card */}
-        <div className="bg-gray-800/50 backdrop-blur-sm border border-green-500/30 rounded-2xl p-8 shadow-2xl">
-          <h2 className="text-3xl font-bold text-center mb-6">
-            <span className="bg-gradient-to-r from-green-400 to-green-600 bg-clip-text text-transparent">
-              {t('loginTitle')}
-            </span>
+        <div className="bg-white border-2 border-gray-200 rounded-2xl p-8 shadow-xl">
+          <h2 className="text-3xl font-bold text-center mb-6 text-gray-900">
+            {t('loginTitle')}
           </h2>
 
           {error && (
-            <div className="bg-red-500/20 border border-red-500/50 text-red-300 px-4 py-3 rounded-lg mb-6 text-sm">
+            <div className="bg-red-50 border border-red-300 text-red-700 px-4 py-3 rounded-lg mb-6 text-sm">
               ⚠️ {error}
             </div>
           )}
@@ -54,28 +52,28 @@ export default function LoginPage({ t, setPage }) {
           <form onSubmit={handleSubmit} className="space-y-6">
             {/* Email */}
             <div>
-              <label className="block text-gray-300 text-sm font-semibold mb-2">
+              <label className="block text-gray-700 text-sm font-semibold mb-2">
                 {t('loginEmail')}
               </label>
               <input
                 type="email"
                 value={email}
                 onChange={e=>setEmail(e.target.value)}
-                className="w-full bg-gray-900/50 border border-green-500/30 text-white px-4 py-3 rounded-lg focus:outline-none focus:border-green-500 focus:ring-2 focus:ring-green-500/50 transition-all"
+                className="w-full bg-gray-50 border-2 border-gray-300 text-gray-900 px-4 py-3 rounded-lg focus:outline-none focus:border-blue-500 focus:ring-2 focus:ring-blue-200 transition-all"
                 placeholder="tu@email.com"
               />
             </div>
 
             {/* Password */}
             <div>
-              <label className="block text-gray-300 text-sm font-semibold mb-2">
+              <label className="block text-gray-700 text-sm font-semibold mb-2">
                 {t('loginPassword')}
               </label>
               <input
                 type="password"
                 value={password}
                 onChange={e=>setPassword(e.target.value)}
-                className="w-full bg-gray-900/50 border border-green-500/30 text-white px-4 py-3 rounded-lg focus:outline-none focus:border-green-500 focus:ring-2 focus:ring-green-500/50 transition-all"
+                className="w-full bg-gray-50 border-2 border-gray-300 text-gray-900 px-4 py-3 rounded-lg focus:outline-none focus:border-blue-500 focus:ring-2 focus:ring-blue-200 transition-all"
                 placeholder="••••••••"
               />
             </div>
@@ -84,7 +82,7 @@ export default function LoginPage({ t, setPage }) {
             <button
               type="submit"
               disabled={loading}
-              className="w-full bg-gradient-to-r from-green-500 to-green-600 text-black py-4 rounded-lg font-bold text-lg hover:from-green-600 hover:to-green-700 transition-all shadow-lg shadow-green-500/50 hover:shadow-green-500/70 disabled:opacity-50 disabled:cursor-not-allowed"
+              className="w-full bg-gradient-to-r from-blue-500 to-blue-700 text-white py-4 rounded-lg font-bold text-lg hover:from-blue-600 hover:to-blue-800 transition-all shadow-lg disabled:opacity-50 disabled:cursor-not-allowed"
             >
               {loading ? (
                 <span className="flex items-center justify-center gap-2">
@@ -104,7 +102,7 @@ export default function LoginPage({ t, setPage }) {
           <div className="mt-6 text-center">
             <button
               onClick={() => setPage('home')}
-              className="text-gray-400 hover:text-green-400 text-sm transition-colors"
+              className="text-gray-600 hover:text-blue-600 text-sm transition-colors"
             >
               ← Volver al inicio
             </button>

@@ -1,26 +1,29 @@
-# Node
+# Dependencias (mantener lockfile versión controlada)
 node_modules/
-npm-debug.log*
-pnpm-lock.yaml
-package-lock.json
-yarn.lock
 
-# Vite/Build
+npm-debug.log*
+yarn-error.log*
+
+# Build / Vite
 dist/
 .vite/
 .cache/
 
-# Env
+# Cobertura
+coverage/
+
+# Entornos (proveer .env.example en repo)
 *.env
 servidor/.env
 cliente/.env
 
-# IDE
+# Sistema / IDE
 .vscode/
 .DS_Store
+Thumbs.db
 
-# Uploads (no subir PDFs de prueba)
-servidor/uploads/
+# Logs
+*.log
 
-# Coverage
-coverage/
+tmp/
+temp/
